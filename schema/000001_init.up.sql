@@ -17,7 +17,6 @@ CREATE TABLE models
 
 CREATE TABLE calls
 (
-    id serial not null unique
     user_id int references users(id) on delete cascade not null
     model_id int references models(id) on delete cascade not null
     call_time timestamp not null
