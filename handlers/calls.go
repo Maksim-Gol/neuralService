@@ -10,5 +10,5 @@ func RegisterRoutes(app *fiber.App){
 
 
 func welcome (c *fiber.Ctx) error {
-	return c.SendString("I am a string")
+	return c.SendString("I am a sent string")
 }
