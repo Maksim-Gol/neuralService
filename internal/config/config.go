@@ -1,23 +1,36 @@
 package config
 
-import ("os"
-		"log"
-		"github.com/ilyakaznacheev/cleanenv"
+import (
+	"github.com/ilyakaznacheev/cleanenv"
+	"log"
+	"os"
 )
 
-type Config struct {
-	Env string `yaml:"env" env-default:"local"`
-	Port string `yaml:"app_port" env-default:":3000"`
-}
+type (
+	HTTPConfig struct {
+		Port string `yaml:"port" env-default:":3000"`
+	}
+
+	PostgresConfig struct {
+	}
+
+	Config struct {
+		Env string `yaml:"env" env-default:"local"`
+
+		HTTP     HTTPConfig     `yaml:"http"`
+		Postgres PostgresConfig `yaml:"postgres"`
+	}
+)
 
 func MustLoad() *Config {
-	
+
 	configPath := os.Getenv("CONFIG_PATH")
+
 	if configPath == "" {
 		log.Fatal("CONFIG_PATH is not set")
 	}
 
-	if _, err := os.Stat(configPath); os.IsNotExist(err){
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Fatalf("config file %s does not exist", configPath)
 	}
 
@@ -28,6 +41,5 @@ func MustLoad() *Config {
 	}
 
 	return &cfg
-
 
 }
