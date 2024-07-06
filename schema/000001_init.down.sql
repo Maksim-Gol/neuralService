@@ -1,1 +1,1 @@
-DROP TABLE calls;
+DROP TABLE service_calls;

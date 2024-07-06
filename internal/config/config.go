@@ -12,6 +12,11 @@ type (
 	}
 
 	PostgresConfig struct {
+		DBHost     string `yaml:"host" env-default:"localhost"`
+		DBPort     string `yaml:"port" env-default:"5432"`
+		DBUser     string `yaml:"user" env-default:"user"`
+		DBPassword string `yaml:"password" env-default:"password"`
+		DBName     string `yaml:"name" env-default:"mydb"`
 	}
 
 	Config struct {

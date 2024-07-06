@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/Maksim-Gol/neuralService/internal/config"
 	"github.com/Maksim-Gol/neuralService/internal/handlers"
+	"github.com/Maksim-Gol/neuralService/internal/repository"
 	"github.com/gofiber/fiber/v2"
 	"log/slog"
 	"os"
+	"context"
 )
 
 const (
@@ -15,13 +18,29 @@ const (
 )
 
 func main() {
-	cfg := config.MustLoad()
 
+	// Init config, logger
+	cfg := config.MustLoad()
 	log := setupLogger(cfg.Env)
 
+	//Connecting to postgres
+	DBconnectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
+		cfg.Postgres.DBUser, cfg.Postgres.DBPassword, cfg.Postgres.DBHost,
+		cfg.Postgres.DBPort, cfg.Postgres.DBName)
+
+	repository.InitDB(DBconnectionString, log)
+	dbPool := repository.GetDB()
+	//Getting values from postgres
+	var username string
+	err := dbPool.QueryRow(context.Background(), "SELECT * from users;").Scan(&username)
+	if err != nil {
+		log.Debug("QueryRow failed", "error", err)
+	}
+	//Initial logs
 	log.Info("Start neuralService", slog.String("env", cfg.Env))
 	log.Debug("Debug messages are enabled")
 
+	//Starting App
 	app := fiber.New()
 	handlers.RegisterRoutes(app)
 
@@ -30,6 +49,7 @@ func main() {
 
 func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
+	// Choosing logger based on environment(local,development,production)
 	switch env {
 	case envLocal:
 		log = slog.New(
