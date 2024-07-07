@@ -15,7 +15,7 @@ type (
 		DBHost string `yaml:"host" env-default:"localhost"`
 		DBPort string `yaml:"port" env-default:"5432"`
 		DBUser string `yaml:"user" env-default:"user"`
-		DBName string `yaml:"name" env-default:"mydb"`
+		DBName string `yaml:"name" env-default:"postgres"`
 	}
 
 	Config struct {

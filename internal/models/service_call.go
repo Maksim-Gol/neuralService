@@ -1,4 +1,4 @@
-package neuralservice
+package models
 
 import "time"
 
