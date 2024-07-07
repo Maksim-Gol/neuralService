@@ -5,5 +5,4 @@ postgres:
   host: "localhost"
   port: "5436"
   user: "postgres"
-  password: "qwerty"
   name: "postgres"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/Maksim-Gol/neuralService/internal/config"
 	"github.com/Maksim-Gol/neuralService/internal/handlers"
@@ -8,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"log/slog"
 	"os"
-	"context"
 )
 
 const (
@@ -25,17 +25,23 @@ func main() {
 
 	//Connecting to postgres
 	DBconnectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
-		cfg.Postgres.DBUser, cfg.Postgres.DBPassword, cfg.Postgres.DBHost,
+		cfg.Postgres.DBUser, os.Getenv("DBPassword"), cfg.Postgres.DBHost,
 		cfg.Postgres.DBPort, cfg.Postgres.DBName)
 
 	repository.InitDB(DBconnectionString, log)
 	dbPool := repository.GetDB()
+
 	//Getting values from postgres
 	var username string
 	err := dbPool.QueryRow(context.Background(), "SELECT * from users;").Scan(&username)
+	//? Как выводить эту ошибку и нужно ли это вообще делать
+	//В данный момент если что-то с подключением не так(неверный пароль, например),
+	//То в логе выдаёт всю строку со всеми данными
 	if err != nil {
 		log.Debug("QueryRow failed", "error", err)
 	}
+	fmt.Println(username)
+
 	//Initial logs
 	log.Info("Start neuralService", slog.String("env", cfg.Env))
 	log.Debug("Debug messages are enabled")
