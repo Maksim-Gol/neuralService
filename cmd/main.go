@@ -24,7 +24,7 @@ func main() {
 
 	//Connecting to postgres
 	DBconnectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
-		cfg.Postgres.DBUser, os.Getenv("DBPassword"), cfg.Postgres.DBHost,
+		cfg.Postgres.DBUser, cfg.Postgres.DBPassword, cfg.Postgres.DBHost,
 		cfg.Postgres.DBPort, cfg.Postgres.DBName)
 
 	dbPool := repository.InitDB(DBconnectionString, log)

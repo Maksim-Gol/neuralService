@@ -16,6 +16,7 @@ type (
 		DBPort string `yaml:"port" env-default:"5432"`
 		DBUser string `yaml:"user" env-default:"user"`
 		DBName string `yaml:"name" env-default:"postgres"`
+		DBPassword string `env:"DBPassword" env-default:"123"`
 	}
 
 	Config struct {

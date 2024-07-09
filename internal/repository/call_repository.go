@@ -9,7 +9,7 @@ import (
 )
 
 type Repository struct {
-	dbPool *pgxpool.Pool
+	DB *pgxpool.Pool
 }
 
 func (r *Repository) SaveCall(ctx context.Context, call models.ServiceCall) (string, error) {
@@ -24,7 +24,7 @@ func InitDB(connectionString string, log *slog.Logger) *Repository {
 		log.Debug("Unable to connect to database", "error", err)
 
 	}
-	return &Repository{dbPool: dbPool}
+	return &Repository{DB: dbPool}
 }
 
 // func GetDB() *pgxpool.Pool {
