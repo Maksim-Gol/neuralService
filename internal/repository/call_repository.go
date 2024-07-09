@@ -2,21 +2,31 @@ package repository
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"log/slog"
+
+	"github.com/Maksim-Gol/neuralService/internal/models"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var dbPool *pgxpool.Pool
+type Repository struct {
+	dbPool *pgxpool.Pool
+}
 
-func InitDB(connectionString string, log *slog.Logger) {
+func (r *Repository) SaveCall(ctx context.Context, call models.ServiceCall) (string, error) {
+	return "hm", ctx.Err()
+}
+
+func InitDB(connectionString string, log *slog.Logger) *Repository {
 	var err error
+	var dbPool *pgxpool.Pool
 	dbPool, err = pgxpool.New(context.Background(), connectionString)
 	if err != nil {
 		log.Debug("Unable to connect to database", "error", err)
 
 	}
+	return &Repository{dbPool: dbPool}
 }
 
-func GetDB() *pgxpool.Pool {
-	return dbPool
-}
+// func GetDB() *pgxpool.Pool {
+// 	return dbPool
+// }

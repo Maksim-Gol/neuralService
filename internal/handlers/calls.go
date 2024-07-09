@@ -1,14 +1,22 @@
 package handlers
 
 import (
+	//"github.com/Maksim-Gol/neuralService/internal/repository"
 	"github.com/Maksim-Gol/neuralService/internal/models"
 	"github.com/gofiber/fiber/v2"
+	"context"
+	//"fmt"
 )
+type RepositoryProvider interface {
+	SaveCall(ctx context.Context, call models.ServiceCall) (string, error)
+}
 
-func RegisterRoutes(app *fiber.App) {
+
+func RegisterRoutes(app *fiber.App, db RepositoryProvider) {
 	app.Get("/api", welcome)
 	app.Post("/calls", StoreCall)
 }
+
 func StoreCall(ctx *fiber.Ctx) error {
 	var callData models.ServiceCall
 
@@ -21,6 +29,16 @@ func StoreCall(ctx *fiber.Ctx) error {
 	return ctx.JSON(fiber.Map{"message": "success", "data": callData})
 }
 
-func welcome(c *fiber.Ctx) error {
-	return c.SendString("I am a sent string")
+func welcome(ctx *fiber.Ctx) error {
+	//Getting values from postgres
+	/*
+	dbPool := repository.GetDB()
+	var username string
+	err := dbPool.QueryRow(context.Background(), "SELECT * from users;").Scan(&username)
+	if err != nil {
+		fmt.Println("QueryRow failed", "error", err)
+	}
+	fmt.Println(username)
+	*/
+	return ctx.JSON(fiber.Map{"message": "success", "data": "Zhora"})
 }
