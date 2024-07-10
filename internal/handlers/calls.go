@@ -5,7 +5,7 @@ import (
 	"github.com/Maksim-Gol/neuralService/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"context"
-	//"fmt"
+	"fmt"
 )
 type RepositoryProvider interface {
 	SaveCall(ctx context.Context, call models.ServiceCall) (string, error)
@@ -13,23 +13,22 @@ type RepositoryProvider interface {
 
 
 func RegisterRoutes(app *fiber.App, db RepositoryProvider) {
-	app.Get("/api", welcome)
+	app.Get("/calls", GetCall)
 	app.Post("/calls", StoreCall)
 }
 
 func StoreCall(ctx *fiber.Ctx) error {
 	var callData models.ServiceCall
-
 	if err := ctx.BodyParser(&callData); err != nil {
 		// ? Как мне здесь получить доступ к логгеру, который я задал в мейне?
+		fmt.Println(fmt.Errorf("%w", err))
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid JSON"})
 
 	}
-
 	return ctx.JSON(fiber.Map{"message": "success", "data": callData})
 }
 
-func welcome(ctx *fiber.Ctx) error {
+func GetCall(ctx *fiber.Ctx) error {
 	//Getting values from postgres
 	/*
 	dbPool := repository.GetDB()
