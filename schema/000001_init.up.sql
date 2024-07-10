@@ -1,23 +1,11 @@
-CREATE TABLE users
+CREATE TABLE service_calls
 (
-    id serial not null unique
-    username varchar(255) not null
-)
-
-
-
-CREATE TABLE models
-(
-    id serial not null unique
-    name varchar(255) not null
-    call_cost int not null
-)
-
-
-
-CREATE TABLE calls
-(
-    user_id int references users(id) on delete cascade not null
-    model_id int references models(id) on delete cascade not null
-    call_time timestamp not null
+    user_id varchar(255) not null,
+    model_id uuid not null,
+    request_id uuid not null,
+    cost int,
+    call_time timestamp default now(),
+    status varchar(255),
+    metadata jsonb,
+    PRIMARY KEY (request_id)
 )

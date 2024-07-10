@@ -1,0 +1,9 @@
+{
+    "user_id": "42",
+    "model_id": "c972c8af-8477-475e-bc26-41894861b740",
+    "request_id": "0f8a3fae-05b6-498b-b798-13502f20bda4",
+    "cost": 0.07,
+    "status": "ok",
+    "metadata": {"data": "meta", "meta": "data"},
+    "call_time": "2024-07-07_07:07:07"
+}
