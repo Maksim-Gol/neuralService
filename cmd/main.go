@@ -21,6 +21,7 @@ func main() {
 	// Init config, logger
 	cfg := config.MustLoad()
 	log := setupLogger(cfg.Env)
+	slog.SetDefault(log)
 
 	//Connecting to postgres
 	DBconnectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
