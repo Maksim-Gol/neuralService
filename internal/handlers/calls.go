@@ -3,9 +3,9 @@ package handlers
 import (
 	//"github.com/Maksim-Gol/neuralService/internal/repository"
 	"context"
-	"log/slog"
 	"github.com/Maksim-Gol/neuralService/internal/models"
 	"github.com/gofiber/fiber/v2"
+	"log/slog"
 )
 
 type RepositoryProvider interface {
@@ -24,12 +24,12 @@ func StoreCall(db RepositoryProvider) fiber.Handler {
 		if err := ctx.BodyParser(&callData); err != nil {
 			slog.Debug("Erorr parsing json body", err)
 			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid JSON"})
-
 		}
 		slog.Info("Stored call into database")
-		err := db.SaveCall(context.Background(), callData)
+		err := db.SaveCall(ctx.Context(), callData)
 		if err != nil {
 			slog.Debug("Error while storing call into database", err)
+			return ctx.JSON(fiber.Map{"message": "400 Bad Request"})
 		}
 		return ctx.JSON(fiber.Map{"message": "success", "data": callData})
 
@@ -37,13 +37,14 @@ func StoreCall(db RepositoryProvider) fiber.Handler {
 }
 
 func GetCall(db RepositoryProvider) fiber.Handler {
-	return func(ctx *fiber.Ctx) error{
-	user, model := ctx.Query("user","Genadiy"), ctx.Query("model", "alphafold")
-	slog.Info("Accepted Get-request for user ", user, "and model ", model, ".")
-	calls, err := db.GetCalls(context.Background(), user, model)
-	if err != nil {
-		slog.Debug("Error getting calls from database")
-	}
-	return ctx.JSON(fiber.Map{"message": "success", "data": calls})
+	return func(ctx *fiber.Ctx) error {
+		user, model := ctx.Query("user", "Genadiy"), ctx.Query("model", "alphafold")
+		slog.Info("Accepted Get-request for user ", user, "and model ", model, ".")
+		calls, err := db.GetCalls(ctx.Context(), user, model)
+		if err != nil {
+			slog.Debug("Error getting calls from database")
+			return ctx.JSON(fiber.Map{"message": "400 Bad Request"})
+		}
+		return ctx.JSON(fiber.Map{"message": "success", "data": calls})
 	}
 }
