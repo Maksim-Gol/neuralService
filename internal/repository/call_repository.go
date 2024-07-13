@@ -11,16 +11,21 @@ type Repository struct {
 	DB *pgxpool.Pool
 }
 
-func InitDB(connectionString string, log *slog.Logger) *Repository {
+func InitDB(connectionString string, log *slog.Logger) (*Repository, error) {
 	var err error
 	var dbPool *pgxpool.Pool
 	dbPool, err = pgxpool.New(context.Background(), connectionString)
 	if err != nil {
-		slog.Error("Unable to connect to database", "error", err)
-
+		//slog.Error("Unable to connect to database", "error", err)
+		return nil, err
+	}
+	_, err = dbPool.Acquire(context.Background())
+	if err != nil {
+		//slog.Error("Unable to acquire connection to database", "error", err)
+		return nil, err
 	}
 	slog.Info("Connected to postgres")
-	return &Repository{DB: dbPool}
+	return &Repository{DB: dbPool}, nil
 }
 
 func (r *Repository) SaveCall(ctx context.Context, callData models.ServiceCall) error {

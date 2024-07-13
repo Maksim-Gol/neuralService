@@ -3,9 +3,11 @@ package handlers
 import (
 	//"github.com/Maksim-Gol/neuralService/internal/repository"
 	"context"
+	"log/slog"
+	"net/http"
+
 	"github.com/Maksim-Gol/neuralService/internal/models"
 	"github.com/gofiber/fiber/v2"
-	"log/slog"
 )
 
 type RepositoryProvider interface {
@@ -29,6 +31,7 @@ func StoreCall(db RepositoryProvider) fiber.Handler {
 		err := db.SaveCall(ctx.Context(), callData)
 		if err != nil {
 			slog.Debug("Error while storing call into database", err)
+			ctx.Status(http.StatusInternalServerError)
 			return ctx.JSON(fiber.Map{"message": "400 Bad Request"})
 		}
 		return ctx.JSON(fiber.Map{"message": "success", "data": callData})
