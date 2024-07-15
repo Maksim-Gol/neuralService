@@ -21,13 +21,18 @@ func main() {
 	// Init config, logger
 	cfg := config.MustLoad()
 	log := setupLogger(cfg.Env)
+	slog.SetDefault(log)
 
 	//Connecting to postgres
 	DBconnectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 		cfg.Postgres.DBUser, cfg.Postgres.DBPassword, cfg.Postgres.DBHost,
 		cfg.Postgres.DBPort, cfg.Postgres.DBName)
 
-	dbPool := repository.InitDB(DBconnectionString, log)
+	dbPool, err := repository.InitDB(DBconnectionString, log)
+	if err != nil {
+		slog.Error("Unable to connect to database", "error", err)
+		// Мне программу дальше запускать или для прям здесь крашить?
+	}
 
 	//Initial logs
 	log.Info("Start neuralService", slog.String("env", cfg.Env))
