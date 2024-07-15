@@ -41,7 +41,7 @@ func StoreCall(db RepositoryProvider) fiber.Handler {
 
 func GetCall(db RepositoryProvider) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		user, model := ctx.Query("user", "Genadiy"), ctx.Query("model", "alphafold")
+		user, model := ctx.Query("user", ""), ctx.Query("model", "")
 		slog.Info("Accepted Get-request for user ", user, "and model ", model, ".")
 		calls, err := db.GetCalls(ctx.Context(), user, model)
 		if err != nil {

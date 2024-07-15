@@ -48,7 +48,11 @@ func (r *Repository) SaveCall(ctx context.Context, callData models.ServiceCall) 
 
 func (r *Repository) GetCalls(ctx context.Context, user string, model string) ([]models.ServiceCall, error) {
 	var calls []models.ServiceCall
-	query := `SELECT * FROM service_calls WHERE user_id = $1 AND model_id = $2`
+	query := `
+	SELECT * FROM service_calls
+	WHERE (CASE WHEN $1 = '' THEN true ELSE user_id = $1 END)
+	AND (CASE WHEN $2 = '' THEN true ELSE model_id = $2::uuid END)
+`
 	rows, err := r.DB.Query(ctx, query, user, model)
 	if err != nil {
 		slog.Error("Error querying values from db", "error", err)
