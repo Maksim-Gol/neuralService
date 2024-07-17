@@ -49,7 +49,7 @@ func (r *Repository) SaveCall(ctx context.Context, callData models.ServiceCall) 
 func (r *Repository) GetCalls(ctx context.Context, user string, model string) ([]models.ServiceCall, error) {
 	var calls []models.ServiceCall
 	query := `
-	SELECT * FROM service_calls
+	SELECT user_id, model_id, request_id, cost, status, call_time, metadata FROM service_calls
 	WHERE (CASE WHEN $1 = '' THEN true ELSE user_id = $1 END)
 	AND (CASE WHEN $2 = '' THEN true ELSE model_id = $2::uuid END)
 `
