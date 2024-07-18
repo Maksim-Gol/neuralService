@@ -32,6 +32,8 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/swaggo/fiber-swagger v1.3.0 // indirect
+	github.com/swaggo/files v1.0.1 // indirect
 	github.com/swaggo/files/v2 v2.0.1 // indirect
 	github.com/swaggo/swag v1.16.3 // indirect
 	github.com/urfave/cli/v2 v2.27.2 // indirect
@@ -40,6 +42,7 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/crypto v0.25.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect

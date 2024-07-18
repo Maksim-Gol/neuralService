@@ -6,8 +6,10 @@ import (
 	"github.com/Maksim-Gol/neuralService/internal/config"
 	"github.com/Maksim-Gol/neuralService/internal/handlers"
 	"github.com/Maksim-Gol/neuralService/internal/repository"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
+	"github.com/gofiber/fiber/v2" 
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	//"github.com/gofiber/swagger"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"log/slog"
 	"os"
 )
@@ -49,7 +51,14 @@ func main() {
 
 	//Starting App
 	app := fiber.New()
-	handlers.RegisterRoutes(app, dbPool, swagger.HandlerDefault)
+
+	//Allow the server to accept requests from any origin(domain)
+	app.Use(cors.New())
+	//Potential security issue, 
+	//but without it swagger returns TypeError: NetworkError when attempting to fetch resource
+	//When executing any http-method
+
+	handlers.RegisterRoutes(app, dbPool, fiberSwagger.WrapHandler)
 
 	app.Listen(cfg.HTTP.Port)
 }

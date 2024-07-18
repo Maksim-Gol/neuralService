@@ -28,8 +28,9 @@ func RegisterRoutes(app *fiber.App, db RepositoryProvider, hd func(*fiber.Ctx) e
 // @ID store-call
 // @Accept json
 // @Produce json
-// @Param input body json true "call info"
+// @Param input body models.ServiceCall true "call info"
 // @Success 200 {string} string "ok"
+// @Failure 400 "Bad Request"
 // @Router /calls [post]
 func StoreCall(db RepositoryProvider) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
@@ -50,6 +51,16 @@ func StoreCall(db RepositoryProvider) fiber.Handler {
 	}
 }
 
+// @Summary GetCall
+// @Tags get
+// @Description Get call information
+// @ID get-call
+// @Produce json
+// @Param user query string false "User ID" 
+// @Param model query string false "Model ID" 
+// @Success 200 {object} []models.ServiceCall "success"
+// @Failure 400 "Bad Request"
+// @Router /calls [get]
 func GetCall(db RepositoryProvider) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		user, model := ctx.Query("user", ""), ctx.Query("model", "")
@@ -59,6 +70,7 @@ func GetCall(db RepositoryProvider) fiber.Handler {
 			slog.Debug("Error getting calls from database")
 			return ctx.JSON(fiber.Map{"message": "400 Bad Request"})
 		}
-		return ctx.JSON(fiber.Map{"message": "success", "data": calls})
+		slog.Info("Returning json data:" + calls[0].UserID)
+		return ctx.JSON(fiber.Map{"data": calls})
 	}
 }
