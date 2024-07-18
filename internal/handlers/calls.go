@@ -5,9 +5,9 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
-
 	"github.com/Maksim-Gol/neuralService/internal/models"
 	"github.com/gofiber/fiber/v2"
+	_ "github.com/Maksim-Gol/neuralService/docs"
 )
 
 type RepositoryProvider interface {
@@ -15,11 +15,22 @@ type RepositoryProvider interface {
 	GetCalls(ctx context.Context, user_id string, model_id string) ([]models.ServiceCall, error)
 }
 
-func RegisterRoutes(app *fiber.App, db RepositoryProvider) {
+func RegisterRoutes(app *fiber.App, db RepositoryProvider, hd func(*fiber.Ctx) error) {
 	app.Get("/calls", GetCall(db))
 	app.Post("/calls", StoreCall(db))
+	app.Get("/swagger/*", hd)
 }
 
+
+// @Summary StoreCall
+// @Tags store
+// @Description Store call information
+// @ID store-call
+// @Accept json
+// @Produce json
+// @Param input body json true "call info"
+// @Success 200 {string} string "ok"
+// @Router /calls [post]
 func StoreCall(db RepositoryProvider) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var callData models.ServiceCall

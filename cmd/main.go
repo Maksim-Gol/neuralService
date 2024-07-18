@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/Maksim-Gol/neuralService/docs"
 	"github.com/Maksim-Gol/neuralService/internal/config"
 	"github.com/Maksim-Gol/neuralService/internal/handlers"
 	"github.com/Maksim-Gol/neuralService/internal/repository"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/swagger"
 	"log/slog"
 	"os"
 )
@@ -15,6 +17,13 @@ const (
 	envProd  = "dev"
 	envDev   = "prod"
 )
+
+// @title NeuralService API
+// @version 1.0
+// @description API server for NeuralService Application
+
+// @host localhost:3002
+// @BasePath /
 
 func main() {
 
@@ -31,7 +40,7 @@ func main() {
 	dbPool, err := repository.InitDB(DBconnectionString, log)
 	if err != nil {
 		slog.Error("Unable to connect to database", "error", err)
-		// Мне программу дальше запускать или для прям здесь крашить?
+		// ?Мне программу дальше запускать или для прям здесь крашить?
 	}
 
 	//Initial logs
@@ -40,7 +49,7 @@ func main() {
 
 	//Starting App
 	app := fiber.New()
-	handlers.RegisterRoutes(app, dbPool)
+	handlers.RegisterRoutes(app, dbPool, swagger.HandlerDefault)
 
 	app.Listen(cfg.HTTP.Port)
 }
