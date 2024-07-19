@@ -2,10 +2,14 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/Maksim-Gol/neuralService/docs"
 	"github.com/Maksim-Gol/neuralService/internal/config"
 	"github.com/Maksim-Gol/neuralService/internal/handlers"
 	"github.com/Maksim-Gol/neuralService/internal/repository"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2" 
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	//"github.com/gofiber/swagger"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	"log/slog"
 	"os"
 )
@@ -15,6 +19,13 @@ const (
 	envProd  = "dev"
 	envDev   = "prod"
 )
+
+// @title NeuralService API
+// @version 1.0
+// @description API server for NeuralService Application
+
+// @host localhost:3002
+// @BasePath /
 
 func main() {
 
@@ -31,7 +42,7 @@ func main() {
 	dbPool, err := repository.InitDB(DBconnectionString, log)
 	if err != nil {
 		slog.Error("Unable to connect to database", "error", err)
-		// Мне программу дальше запускать или для прям здесь крашить?
+		os.Exit(1)
 	}
 
 	//Initial logs
@@ -40,7 +51,14 @@ func main() {
 
 	//Starting App
 	app := fiber.New()
-	handlers.RegisterRoutes(app, dbPool)
+
+	//Allow the server to accept requests from any origin(domain)
+	app.Use(cors.New())
+	//Potential security issue, 
+	//but without it swagger returns TypeError: NetworkError when attempting to fetch resource
+	//When executing any http-method
+
+	handlers.RegisterRoutes(app, dbPool, fiberSwagger.WrapHandler)
 
 	app.Listen(cfg.HTTP.Port)
 }
