@@ -42,7 +42,7 @@ func main() {
 	dbPool, err := repository.InitDB(DBconnectionString, log)
 	if err != nil {
 		slog.Error("Unable to connect to database", "error", err)
-		// ?Мне программу дальше запускать или для прям здесь крашить?
+		os.Exit(1)
 	}
 
 	//Initial logs
